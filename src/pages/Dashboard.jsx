@@ -1,146 +1,221 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Carousel } from "react-responsive-carousel";
-import { FaMoneyBillWave, FaArrowDown, FaListUl, FaBars } from "react-icons/fa";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
+import React, { useEffect, useRef, useState } from "react";
 
-export default function Dashboard() {
-  
-  const user = {
-    name: "David Moenga",
-  };
-
-  const supportedCountries = [
-    { name: "Kenya", flag: "🇰🇪", description: "M-Pesa transfers supported" },
-    { name: "Nigeria", flag: "🇳🇬", description: "Instant Naira payouts" },
-    { name: "Ghana", flag: "🇬🇭", description: "MTN Mobile Money enabled" },
-    { name: "USA", flag: "🇺🇸", description: "Send to USD accounts" },
-    { name: "UK", flag: "🇬🇧", description: "GBP bank transfer" },
-  ];
-
-  const recentTransactions = [
-    { id: 1, name: "Transfer to James", amount: "-$250.00", date: "June 2" },
-    { id: 2, name: "Received from Alice", amount: "+$500.00", date: "June 1" },
-    { id: 3, name: "Transfer to Market", amount: "-$120.00", date: "May 31" },
-  ];
-
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [search, setSearch] = useState("");
-
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return "Good Morning";
-    if (hour < 18) return "Good Afternoon";
-    return "Good Evening";
-  };
-
-  const filteredTransactions = recentTransactions.filter(txn =>
-    txn.name.toLowerCase().includes(search.toLowerCase())
-  );
+function Sparkline({ data, color = "#00FFA3" }) {
+  if (!data || data.length === 0) return null;
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  const points = data
+    .map((point, idx) => {
+      const x = (idx / (data.length - 1)) * 100;
+      const y = 100 - ((point - min) / (max - min)) * 100;
+      return `${x},${y}`;
+    })
+    .join(" ");
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-[#f6ecf8] text-[#5B2C6F]">
-      {/* Mobile Sidebar Toggle */}
-      <div className="md:hidden p-4 flex justify-between items-center bg-white shadow-md">
-        <h1 className="text-2xl font-bold">MZend</h1>
-        <button onClick={() => setSidebarOpen(!sidebarOpen)}>
-          <FaBars className="text-2xl" />
-        </button>
-      </div>
+    <svg
+      viewBox="0 0 100 100"
+      className="w-20 h-8"
+      preserveAspectRatio="none"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polyline points={points} />
+    </svg>
+  );
+}
 
-      {/* Sidebar */}
-      <aside className={`w-full md:w-64 bg-white shadow-md p-6 md:block ${sidebarOpen ? "block" : "hidden"}`}>
-        <nav className="flex flex-col gap-4 text-lg">
-          <Link to="/dashboard" className="hover:text-[#FFD700]">Dashboard</Link>
-          <Link to="/wallet" className="hover:text-[#FFD700]">Wallet</Link>
-          <Link to="/send" className="hover:text-[#FFD700]">Send Money</Link>
-          <Link to="/receive" className="hover:text-[#FFD700]">Receive Money</Link>
-          <Link to="/transactions" className="hover:text-[#FFD700]">Transactions</Link>
-          <Link to="/profile" className="hover:text-[#FFD700]">Profile</Link>
-          {/* <Link to="/settings" className="hover:text-[#FFD700]">Settings</Link> */}
-          <Link to="/support" className="hover:text-[#FFD700]">Support</Link>
-          <Link to="/logout" className="mt-6 text-red-500 hover:text-red-700">Logout</Link>
-        </nav>
-      </aside>
+export default function Dashboard() {
+  const liveRates = [
+    {
+      pair: "XLM/USD",
+      rate: "0.1234",
+      change: "+1.24%",
+      trend: [0.12, 0.122, 0.121, 0.123, 0.125, 0.124, 0.123],
+    },
+    {
+      pair: "BTC/USD",
+      rate: "28,342.56",
+      change: "-0.56%",
+      trend: [28350, 28300, 28200, 28350, 28400, 28350, 28342],
+    },
+    {
+      pair: "ETH/USD",
+      rate: "1,882.30",
+      change: "+0.87%",
+      trend: [1850, 1870, 1865, 1880, 1890, 1885, 1882],
+    },
+    {
+      pair: "EUR/USD",
+      rate: "1.1023",
+      change: "-0.32%",
+      trend: [1.10, 1.11, 1.10, 1.11, 1.10, 1.10, 1.10],
+    },
+  ];
 
-      {/* Main Content */}
-      <main className="flex-1 p-6">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h2 className="text-3xl font-bold">{getGreeting()}, {user.name} 👋</h2>
-            <p className="text-[#2E0854] mt-1">Explore your remittance options.</p>
-          </div>
-          <img
-            src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.name}`}
-            alt="User Avatar"
-            className="w-12 h-12 rounded-full border"
-          />
-        </div>
+  const transactions = [
+    { id: 1, type: "Send", amount: "100 XLM", date: "2025-06-08", status: "Completed" },
+    { id: 2, type: "Receive", amount: "50 USD", date: "2025-06-07", status: "Pending" },
+    { id: 3, type: "Convert", amount: "200 EUR", date: "2025-06-06", status: "Completed" },
+    { id: 4, type: "Send", amount: "0.05 BTC", date: "2025-06-05", status: "Failed" },
+  ];
 
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-10">
-          <div className="bg-white p-4 rounded-xl shadow">
-            <p className="text-sm text-gray-500">Total Sent</p>
-            <p className="text-2xl font-bold text-red-500">-$370.00</p>
-          </div>
-          <div className="bg-white p-4 rounded-xl shadow">
-            <p className="text-sm text-gray-500">Total Received</p>
-            <p className="text-2xl font-bold text-green-600">+$500.00</p>
-          </div>
-          <div className="bg-white p-4 rounded-xl shadow">
-            <p className="text-sm text-gray-500">Current Balance</p>
-            <p className="text-2xl font-bold text-[#5B2C6F]">$130.00</p>
-          </div>
-        </div>
+  // Duplicate liveRates to create infinite scroll effect
+  const scrollRef = useRef(null);
 
-        {/* Quick Actions */}
-        <section className="mb-10">
-          <h3 className="text-xl font-semibold mb-4">Quick Actions</h3>
-          <div className="flex flex-wrap gap-4">
-            <Link to="/send" className="bg-[#FFD700] text-[#5B2C6F] px-6 py-3 rounded-xl font-semibold shadow hover:bg-[#e6c200] transition flex items-center gap-2">
-              <FaMoneyBillWave /> Send Money
-            </Link>
-            <Link to="/receive" className="bg-[#5B2C6F] text-white px-6 py-3 rounded-xl font-semibold shadow hover:bg-[#3c1e50] transition flex items-center gap-2">
-              <FaArrowDown /> Receive Money
-            </Link>
-            <Link to="/transactions" className="bg-white border border-[#5B2C6F] text-[#5B2C6F] px-6 py-3 rounded-xl font-semibold shadow hover:bg-[#f9f3fc] transition flex items-center gap-2">
-              <FaListUl /> View Transactions
-            </Link>
-          </div>
-        </section>
+  useEffect(() => {
+    const slider = scrollRef.current;
+    let start = 0;
+    let reqId;
 
-        {/* Country Carousel */}
-        
+    function step() {
+      start -= 0.5; // Speed of sliding; smaller = slower
+      if (Math.abs(start) >= slider.scrollWidth / 2) {
+        start = 0; // Reset for infinite loop
+      }
+      slider.style.transform = `translateX(${start}px)`;
+      reqId = requestAnimationFrame(step);
+    }
 
-        {/* Recent Transactions */}
-        <section>
-          <h3 className="text-xl font-semibold mb-4">Recent Transactions</h3>
-          <input
-            type="text"
-            placeholder="Search transactions..."
-            className="mb-4 p-2 border rounded w-full md:w-1/2"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-          />
-          <div className="bg-white rounded-xl shadow p-5 space-y-4">
-            {filteredTransactions.map(txn => (
-              <div key={txn.id} className="flex justify-between items-center border-b pb-2 last:border-none">
-                <div>
-                  <p className="font-medium">{txn.name}</p>
-                  <p className="text-sm text-gray-500">{txn.date}</p>
-                </div>
-                <p className={`font-semibold ${txn.amount.startsWith('-') ? 'text-red-500' : 'text-green-600'}`}>
-                  {txn.amount}
-                </p>
+    reqId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(reqId);
+  }, []);
+
+  return (
+    <main className="min-h-screen bg-black text-white px-8 py-8 pt-24 sm:pt-24 font-sans select-none">
+      {/* Sliding ticker with continuous infinite scroll */}
+      <section className="relative overflow-hidden mb-10 pt-2">
+        <div
+          ref={scrollRef}
+          className="flex gap-4 whitespace-nowrap will-change-transform"
+          style={{ userSelect: "none" }}
+          aria-label="Live currency exchange rates"
+        >
+          {[...liveRates, ...liveRates].map(({ pair, rate, change, trend }, i) => {
+            const isPositive = change.startsWith("+");
+            return (
+              <div
+                key={i}
+                className={`inline-block min-w-[220px] bg-[#111111] rounded-lg p-4 shadow-lg
+                  flex flex-col items-center text-center
+                  hover:scale-105 hover:shadow-yellow-400 transition-transform duration-300 cursor-pointer`}
+              >
+                <h3 className="text-lg font-semibold mb-1 text-[#00FFA3]">{pair}</h3>
+                <div className="text-2xl font-bold mb-1">{rate}</div>
+                <span
+                  className={`mb-2 font-semibold ${
+                    isPositive ? "text-green-400" : "text-red-500"
+                  }`}
+                >
+                  {change}
+                </span>
+                <Sparkline data={trend} color={isPositive ? "#22c55e" : "#ef4444"} />
               </div>
-            ))}
-            {filteredTransactions.length === 0 && (
-              <p className="text-center text-gray-500">No recent activity yet.</p>
-            )}
+            );
+          })}
+        </div>
+
+        {/* Gradient fade overlays on sides */}
+        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-black"></div>
+        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-black"></div>
+      </section>
+
+      {/* Main cards */}
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-16">
+        <div
+          className="bg-[#1A1A1A] rounded-xl p-7 shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-yellow-400"
+          style={{ animation: "fadeInScale 0.9s ease forwards" }}
+        >
+          <h2 className="text-2xl font-semibold mb-5 text-[#00FFA3]">Currency Converter</h2>
+          <p className="text-gray-400 mb-5">
+            Convert between multiple fiat and cryptocurrencies instantly.
+          </p>
+          <div className="flex gap-3 items-center">
+            <input
+              type="number"
+              className="w-full rounded-md bg-black p-3 text-white placeholder-gray-500 focus:outline-yellow-400"
+              placeholder="Enter amount"
+            />
+            <select className="bg-black text-white rounded-md p-3 focus:outline-yellow-400">
+              <option>XLM</option>
+              <option>USD</option>
+              <option>BTC</option>
+              <option>ETH</option>
+              <option>EUR</option>
+            </select>
+            <button className="bg-yellow-400 px-5 py-3 rounded font-semibold text-black hover:bg-yellow-300 transition">
+              Convert
+            </button>
           </div>
-        </section>
-      </main>
-    </div>
+        </div>
+
+        <div
+          className="bg-[#1A1A1A] rounded-xl p-7 shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-yellow-400"
+          style={{ animation: "fadeInScale 1.1s ease forwards" }}
+        >
+          <h2 className="text-2xl font-semibold mb-5 text-[#00FFA3]">Stellar Wallet</h2>
+          <p className="text-gray-400 mb-6">
+            Access your Stellar account, view balance, send and receive funds globally.
+          </p>
+          <button className="bg-yellow-400 px-7 py-3 rounded font-semibold text-black hover:bg-yellow-300 transition">
+            Connect Wallet
+          </button>
+        </div>
+      </section>
+
+      {/* Transaction Summary */}
+      <section className="bg-[#1A1A1A] rounded-xl p-6 shadow-lg max-w-5xl mx-auto">
+        <h3 className="text-xl font-semibold text-[#00FFA3] mb-6">Transaction Summary</h3>
+        <table className="w-full text-left text-gray-300">
+          <thead className="border-b border-gray-700">
+            <tr>
+              <th className="py-2 px-4">Type</th>
+              <th className="py-2 px-4">Amount</th>
+              <th className="py-2 px-4">Date</th>
+              <th className="py-2 px-4">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {transactions.map(({ id, type, amount, date, status }) => (
+              <tr
+                key={id}
+                className="border-b border-gray-800 hover:bg-yellow-400/10 transition-colors cursor-default"
+              >
+                <td className="py-3 px-4">{type}</td>
+                <td className="py-3 px-4">{amount}</td>
+                <td className="py-3 px-4">{date}</td>
+                <td
+                  className={`py-3 px-4 font-semibold ${
+                    status === "Completed"
+                      ? "text-green-400"
+                      : status === "Pending"
+                      ? "text-yellow-400"
+                      : "text-red-500"
+                  }`}
+                >
+                  {status}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+
+      <style jsx>{`
+        @keyframes fadeInScale {
+          0% {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+      `}</style>
+    </main>
   );
 }

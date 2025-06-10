@@ -1,69 +1,36 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import {
+  Wallet,
+  Send,
+  RefreshCcw,
+  Globe,
+} from "lucide-react";
 
 const features = [
   {
-    title: "Secure Trading",
-    desc: "Advanced security measures to keep your assets safe.",
-    icon: (
-      <svg
-        className="w-8 h-8 text-yellow-400"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M12 11c-2.21 0-4 1.79-4 4v3h8v-3c0-2.21-1.79-4-4-4zM6 7a6 6 0 1112 0 6 6 0 01-12 0z"
-        ></path>
-      </svg>
-    ),
+    title: "Stellar Wallet Connection",
+    desc: "Securely connect and manage your Stellar wallet.",
+    icon: <Wallet className="w-8 h-8 text-[#00FFA3]" />,
   },
   {
-    title: "Global Reach",
-    desc: "Trade assets worldwide with low fees and fast transactions.",
-    icon: (
-      <svg
-        className="w-8 h-8 text-yellow-400"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M12 2a10 10 0 00-10 10 10 10 0 0010 10 10 10 0 0010-10 10 10 0 00-10-10zM12 6v6l4 2"
-        ></path>
-      </svg>
-    ),
+    title: "Global Send & Receive",
+    desc: "Transfer money across borders in seconds.",
+    icon: <Send className="w-8 h-8 text-yellow-400" />,
   },
   {
-    title: "Fast & Reliable",
-    desc: "Instant deposits and withdrawals with 24/7 support.",
-    icon: (
-      <svg
-        className="w-8 h-8 text-yellow-400"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M13 10V3L4 14h7v7l9-11h-7z"
-        ></path>
-      </svg>
-    ),
+    title: "Real-Time Exchange",
+    desc: "Convert currencies at live market rates instantly.",
+    icon: <RefreshCcw className="w-8 h-8 text-blue-400" />,
+  },
+  {
+    title: "Multi-Currency Support",
+    desc: "Hold, send, and receive multiple fiat & crypto assets.",
+    icon: <Globe className="w-8 h-8 text-purple-400" />,
   },
 ];
+
 
 // Dummy live exchange data for demo
 const liveRates = [
@@ -120,71 +87,55 @@ export default function Landing() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-black text-white font-sans px-6 py-16">
+      <main className="min-h-screen bg-black text-white font-sans px-6 py-16 pt-27">
         {/* Hero Section */}
-       <section
-  className="max-w-5xl mx-auto text-center px-4 sm:px-0"
-  style={{ animation: "fadeInUp 1s ease forwards" }}
->
-  <h1 className="text-5xl sm:text-6xl font-extrabold mb-6 leading-tight relative inline-block">
-    The Fastest Way to Trade <br />
-    <span className="text-yellow-400 bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-500 bg-clip-text text-transparent font-extrabold">
-      Crypto & Fiat
-    </span>
-    <span className="absolute left-0 bottom-0 w-16 h-1 bg-yellow-400 rounded-full animate-pulse"></span>
-  </h1>
-  <p className="text-gray-300 mb-12 text-lg max-w-xl mx-auto sm:text-xl">
-    Experience seamless, secure, and instant cross-border payments powered by Stellar.
-  </p>
-  <div className="flex justify-center gap-6 flex-wrap">
-    <a
-      href="#get-started"
-      className="bg-yellow-400 text-black px-8 py-3 rounded font-semibold
-                 hover:bg-yellow-300 hover:shadow-lg transition transform hover:scale-105"
-    >
-      Get Started
-    </a>
-    <a
-      href="#learn-more"
-      className="border border-yellow-400 text-yellow-400 px-8 py-3 rounded font-semibold
-                 hover:bg-yellow-400 hover:text-black hover:shadow-lg transition transform hover:scale-105"
-    >
-      Learn More
-    </a>
-  </div>
-
-  <style jsx global>{`
-    @keyframes fadeInUp {
-      0% {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  `}</style>
-</section>
-
+        <section
+          className="max-w-5xl mx-auto text-center"
+          style={{ animation: "fadeIn 1s ease forwards" }}
+        >
+          <h1 className="text-5xl font-extrabold mb-6 leading-tight">
+            <span className="text-yellow-400">M</span>Zend <br />
+            The Fastest Way to Send and Receive <br />
+            <span className="text-yellow-400">Crypto & Fiat</span>
+          </h1>
+          <p className="text-gray-300 mb-10 text-lg max-w-xl mx-auto">
+            Experience seamless, secure, and instant cross-border payments
+            powered by Stellar.
+          </p>
+          <div className="flex justify-center gap-6 flex-wrap">
+            <a
+              href="Register"
+              className="bg-yellow-400 text-black px-8 py-3 rounded font-semibold hover:bg-yellow-300 transition transform hover:scale-105"
+            >
+              Get Started
+            </a>
+            <a
+              href="LearnMore"
+              className="border border-yellow-400 text-yellow-400 px-8 py-3 rounded font-semibold hover:bg-yellow-400 hover:text-black transition transform hover:scale-105"
+            >
+              Learn More
+            </a>
+          </div>
+        </section>
 
         {/* Features */}
-        <section
-          id="learn-more"
-          className="max-w-6xl mx-auto mt-20 flex flex-col sm:flex-row justify-between gap-10"
-        >
-          {features.map(({ icon, title, desc }, i) => (
-            <div
-              key={i}
-              className="flex flex-col items-center text-center max-w-xs mx-auto bg-[#1A1A1A] rounded-lg p-6 shadow-lg hover:shadow-yellow-400 hover:scale-105 transition-transform"
-              style={{ animation: `fadeIn 0.8s ease forwards`, animationDelay: `${i * 0.3}s` }}
-            >
-              <div className="mb-5">{icon}</div>
-              <h3 className="text-xl font-semibold mb-2">{title}</h3>
-              <p className="text-gray-400">{desc}</p>
-            </div>
-          ))}
-        </section>
+       <section
+  id="learn-more"
+  className="max-w-7xl mx-auto mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-4"
+>
+  {features.map(({ icon, title, desc }, i) => (
+    <div
+      key={i}
+      className="flex flex-col items-center text-center bg-[#1A1A1A] rounded-xl p-6 shadow-lg
+                 hover:shadow-yellow-400 hover:scale-105 transition-transform"
+      style={{ animation: `fadeIn 0.8s ease forwards`, animationDelay: `${i * 0.25}s` }}
+    >
+      <div className="mb-5">{icon}</div>
+      <h3 className="text-lg font-semibold text-[#00FFA3] mb-2">{title}</h3>
+      <p className="text-gray-400 text-sm">{desc}</p>
+    </div>
+  ))}
+</section>
 
         {/* Live Exchange Rates */}
         <section className="max-w-6xl mx-auto mt-24">
@@ -224,19 +175,19 @@ export default function Landing() {
           className="mt-24 bg-yellow-400 text-black rounded-lg max-w-4xl mx-auto py-12 px-10 text-center shadow-lg hover:shadow-yellow-500 transition"
           style={{ animation: "fadeIn 1s ease forwards", animationDelay: "1.2s" }}
         >
-          <h2 className="text-3xl font-bold mb-4">Ready to start trading today?</h2>
+          <h2 className="text-3xl font-bold mb-4">Ready to start sending and receiving crypto and fiat?</h2>
           <p className="mb-8 max-w-xl mx-auto">
-            Join thousands of users already enjoying fast and secure payments.
+            Join thousands of users already enjoying fast and secure exchange rates.
           </p>
           <a
-            href="/signup"
+            href="/Register"
             className="bg-black text-yellow-400 px-10 py-3 rounded font-semibold hover:bg-gray-900 transition transform hover:scale-105"
           >
             Create Account
           </a>
         </section>
       </main>
-     
+    
 
       <style jsx global>{`
         @keyframes fadeIn {

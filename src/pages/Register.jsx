@@ -23,7 +23,7 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f6ecf8]">
+    <div className="min-h-screen flex items-center justify-center bg-[#0c0c0c]">
       <form
         onSubmit={handleRegister}
         className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md"

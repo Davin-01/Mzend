@@ -14,6 +14,7 @@ import Profile from "./pages/Profile";
 import Support from "./pages/Support";
 import Exchange from "./pages/Exchange";
 import LaunchApp from "./pages/LaunchApp";
+import LearnMore from "./pages/LearnMore";
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="/support" element={<Support />} />
         <Route path="/exchange" element={<Exchange />} />
         <Route path="/app" element={<LaunchApp />} />
+        <Route path="/learnmore" element={<LearnMore />} />
       </Routes>
       <Footer />
     </>
