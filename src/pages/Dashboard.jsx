@@ -12,6 +12,7 @@ import {
   Download,
   CreditCard,
   Banknote,
+  Phone,
 } from "lucide-react";
 import clsx from "clsx";
 
@@ -25,8 +26,8 @@ const RATES = [
 ];
 
 export default function Dashboard() {
-  /* slider */
   const track = useRef(null);
+
   useEffect(() => {
     const el = track.current;
     let x = 0;
@@ -41,14 +42,12 @@ export default function Dashboard() {
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  /* theme + form state */
-  const [dark, setDark]           = useState(true);
-  const [amount, setAmount]       = useState(1000);
+  const [dark, setDark] = useState(true);
+  const [amount, setAmount] = useState(1000);
   const [fundMethod, setFundMethod] = useState("mpesa");
-  const [swapFrom, setSwapFrom]   = useState("KES");
-  const [swapTo, setSwapTo]       = useState("XLM");
+  const [swapFrom, setSwapFrom] = useState("KES");
+  const [swapTo, setSwapTo] = useState("XLM");
 
-  /* reusable card style */
   const cardBase =
     "group border rounded-xl backdrop-blur-md shadow transition-all duration-300";
   const cardGoldHover =
@@ -60,88 +59,78 @@ export default function Dashboard() {
   );
 
   return (
-    <div
-      className={clsx(
-        "min-h-screen flex",
-        dark ? "bg-gray-900 text-gray-100" : "bg-white text-gray-900"
-      )}
-    >
-      {/* ────────── Sidebar ────────── */}
-      <aside
-        className={clsx(
-          "w-64 p-6 sticky top-0 h-screen flex flex-col gap-8",
-          dark ? "bg-gray-800" : "bg-gray-100"
-        )}
+    <div className={clsx("min-h-screen flex", dark ? "bg-gray-900 text-gray-100" : "bg-white text-gray-900")}>
+      {/* Sidebar */}
+     <aside className={clsx(
+  "w-64 p-6 sticky top-0 h-screen flex flex-col gap-8",
+  dark ? "bg-gray-800 text-white" : "bg-gray-100 text-black"
+)}>
+  <h2 className="text-2xl font-bold">MZend</h2>
+
+  <nav className="flex flex-col gap-5 text-lg">
+    {[
+      { Icon: Wallet, path: "/wallet", label: "Wallet" },
+      { Icon: Send, path: "/send", label: "Send" },
+      { Icon: Repeat, path: "/exchange", label: "Exchange" },
+      { Icon: Download, path: "/fund", label: "Fund" },
+    ].map(({ Icon, path, label }) => (
+      <Link
+        key={label}
+        to={path}
+        className="flex items-center gap-3 hover:text-[#FFD700] transition-colors"
       >
-        <h2 className="text-2xl font-bold">MZend</h2>
+        <Icon size={20} /> {label}
+      </Link>
+    ))}
+  </nav>
 
-        <nav className="flex flex-col gap-5 text-lg">
-          {[
-            { Icon: Wallet, path: "/wallet", label: "Wallet" },
-            { Icon: Send, path: "/send", label: "Send" },
-            { Icon: Repeat, path: "/exchange", label: "Exchange" },
-            { Icon: Download, path: "/fund", label: "Fund" },
-          ].map(({ Icon, path, label }) => (
-            <Link
-              key={label}
-              to={path}
-              className="flex items-center gap-3 hover:text-[#FFD700] transition-colors"
-            >
-              <Icon size={20} /> {label}
-            </Link>
-          ))}
-        </nav>
+  <div className="mt-auto flex flex-col gap-3">
+    <button
+      onClick={() => {
+        // TODO: handle logout logic
+        console.log("Logging out...");
+      }}
+      className="px-4 py-2 rounded bg-[#FFD700] text-black flex items-center justify-center gap-2 hover:brightness-110"
+    >
+      Logout
+    </button>
 
-        <button
-          onClick={() => setDark((p) => !p)}
-          className="mt-auto px-4 py-2 rounded bg-[#FFD700] text-black flex items-center gap-2 hover:brightness-110"
-        >
-          {dark ? <Sun size={16} /> : <Moon size={16} />} Toggle theme
-        </button>
-      </aside>
+    <button
+      onClick={() => setDark((prev) => !prev)}
+      className="px-4 py-2 rounded bg-[#FFD700] text-black flex items-center justify-center gap-2 hover:brightness-110"
+    >
+      {dark ? <Sun size={16} /> : <Moon size={16} />} Toggle theme
+    </button>
+  </div>
+</aside>
 
-      {/* ────────── Main Container ────────── */}
+
+      {/* Main */}
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
-        {/* Header */}
-        <header
-          className={clsx(
-            "flex items-center justify-between px-6 py-3 shadow-sm",
-            dark ? "bg-gray-800" : "bg-gray-100"
-          )}
-        >
+        <header className={clsx("flex items-center justify-between px-6 py-3 shadow-sm", dark ? "bg-gray-800" : "bg-gray-100")}>
           <h1 className="font-semibold text-lg">Dashboard</h1>
-
           <div className="flex items-center gap-4">
-            <Link
-              to="/notifications"
-              aria-label="Notifications"
-              className="relative p-2 rounded-full hover:bg-gray-700/40 hover:text-[#FFD700] transition-colors"
-            >
+             <Link to="/learnmore" className="relative p-2 rounded-full hover:bg-gray-700/40 hover:text-[#FFD700] transition-colors">
+              About
+             
+            </Link>
+             <Link to="/notifications" className="relative p-2 rounded-full hover:bg-gray-700/40 hover:text-[#FFD700] transition-colors">
+              Support
+             
+            </Link>
+            <Link to="/notifications" className="relative p-2 rounded-full hover:bg-gray-700/40 hover:text-[#FFD700] transition-colors">
               <Bell size={18} />
               <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
             </Link>
-
-            <Link
-              to="/profile"
-              aria-label="Profile"
-              className="w-9 h-9 rounded-full bg-[#FFD700] grid place-content-center font-bold text-black hover:brightness-110"
-            >
+            <Link to="/profile" className="w-9 h-9 rounded-full bg-[#FFD700] grid place-content-center font-bold text-black hover:brightness-110">
               U
             </Link>
           </div>
         </header>
 
         {/* Ticker */}
-        <section
-          className={clsx(
-            "py-3 overflow-x-hidden",
-            dark ? "bg-gray-800" : "bg-gray-50"
-          )}
-        >
-          <div
-            ref={track}
-            className="flex gap-6 px-6 whitespace-nowrap will-change-transform"
-          >
+        <section className={clsx("py-3 overflow-x-hidden", dark ? "bg-gray-800" : "bg-gray-50")}>
+          <div ref={track} className="flex gap-6 px-6 whitespace-nowrap will-change-transform">
             {RATES.concat(RATES).map((r, idx) => (
               <div
                 key={idx}
@@ -162,42 +151,22 @@ export default function Dashboard() {
           </div>
         </section>
 
-        {/* Content */}
+        {/* Main Content */}
         <main className="flex-1 overflow-y-auto p-6 space-y-10">
-          {/* Top Stat Cards */}
+          {/* Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              {
-                label: "Wallet Balance",
-                value: "0.00",
-                Icon: Wallet,
-                link: "/wallet",
-              },
-              {
-                label: "Send Money",
-                value: "Quick transfer",
-                Icon: Send,
-                link: "/send",
-              },
-              {
-                label: "Receive Funds",
-                value: "Share address",
-                Icon: ArrowDownCircle,
-                link: "/receive",
-              },
+              { label: "Wallet Balance", value: "0.00", Icon: Wallet, link: "/wallet" },
+              { label: "Send Money", value: "Quick transfer", Icon: Send, link: "/send" },
+              { label: "Receive Funds", value: "Share address", Icon: ArrowDownCircle, link: "/receive" },
             ].map(({ label, value, Icon, link }) => (
               <Link
                 key={label}
                 to={link}
-                className={clsx(
-                  cardStyle,
-                  "p-6 flex justify-between items-start no-underline text-inherit"
-                )}
+                className={clsx(cardStyle, "p-6 flex justify-between items-start no-underline text-inherit")}
               >
                 <div>
-                  <h3 className="text-lg font-semibold mb-1 transition-colors group-hover:text-[#FFD700]">
-                    {label}
-                  </h3>
+                  <h3 className="text-lg font-semibold mb-1 group-hover:text-[#FFD700]">{label}</h3>
                   <p className="text-sm opacity-75">{value}</p>
                 </div>
                 <Icon className="w-9 h-9 text-[#FFD700] opacity-80 group-hover:opacity-100 transition-opacity" />
@@ -209,12 +178,8 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Fund Wallet */}
             <div className={clsx(cardStyle, "p-6")}>
-              <h3 className="text-lg font-semibold mb-4 group-hover:text-[#FFD700] transition-colors">
-                Fund Wallet
-              </h3>
-
+              <h3 className="text-lg font-semibold mb-4 group-hover:text-[#FFD700]">Fund Wallet</h3>
               <div className="space-y-4">
-                {/* Amount input */}
                 <div>
                   <label className="text-xs opacity-70">Amount (KES)</label>
                   <input
@@ -224,15 +189,11 @@ export default function Dashboard() {
                     className="w-full p-2 mt-1 rounded bg-gray-700/60 focus:outline-[#FFD700]"
                   />
                 </div>
-
-                {/* Method buttons */}
                 <div>
-                  <label className="text-xs opacity-70 block mb-1">
-                    Funding Method
-                  </label>
+                  <label className="text-xs opacity-70 block mb-1">Funding Method</label>
                   <div className="flex gap-3">
                     {[
-                      { id: "mpesa", lbl: "M-PESA", Icon: PhoneIcon },
+                      { id: "mpesa", lbl: "M-PESA", Icon: Phone },
                       { id: "card", lbl: "Card", Icon: CreditCard },
                       { id: "bank", lbl: "Bank", Icon: Banknote },
                     ].map(({ id, lbl, Icon }) => (
@@ -252,7 +213,6 @@ export default function Dashboard() {
                     ))}
                   </div>
                 </div>
-
                 <button className="w-full py-2 rounded bg-green-600 hover:bg-green-500 transition">
                   Deposit {amount.toLocaleString()} KES
                 </button>
@@ -261,10 +221,7 @@ export default function Dashboard() {
 
             {/* Exchange */}
             <div className={clsx(cardStyle, "p-6")}>
-              <h3 className="text-lg font-semibold mb-4 group-hover:text-[#FFD700] transition-colors">
-                Exchange
-              </h3>
-
+              <h3 className="text-lg font-semibold mb-4 group-hover:text-[#FFD700]">Exchange</h3>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
@@ -292,7 +249,6 @@ export default function Dashboard() {
                     </select>
                   </div>
                 </div>
-
                 <div>
                   <label className="text-xs opacity-70">Amount</label>
                   <input
@@ -301,7 +257,6 @@ export default function Dashboard() {
                     className="w-full p-2 mt-1 rounded bg-gray-700/60 focus:outline-[#FFD700]"
                   />
                 </div>
-
                 <button className="w-full py-2 rounded bg-purple-600 hover:bg-purple-500 flex items-center justify-center gap-2 transition">
                   <Repeat size={18} /> Swap
                 </button>
@@ -313,21 +268,3 @@ export default function Dashboard() {
     </div>
   );
 }
-
-/* Dummy phone icon */
-function PhoneIcon(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M22 16.92V23a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 3.16 8.18 2 2 0 0 1 5 6h6.09a2 2 0 0 1 2 1.72 12.05 12.05 0 0 0 .56 2.57 2 2 0 0 1-.45 2l-2.27 2.27a16 16 0 0 0 6.72 6.72l2.27-2.27a2 2 0 0 1 2-.45 13.35 13.35 0 0 0 2.57.56A2 2 0 0 1 22 16.92z" />
-    </svg>
-  );
-}
-~

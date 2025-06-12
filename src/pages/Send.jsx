@@ -14,11 +14,11 @@ export default function Send() {
   const [sending, setSending] = useState(false);
 
   const countries = [
-    { code: "KE", name: "Kenya" },
-    { code: "NG", name: "Nigeria" },
-    { code: "GH", name: "Ghana" },
-    { code: "US", name: "USA" },
-    { code: "UK", name: "UK" },
+    { code: "KE", name: "Kenya", flag: "🇰🇪" },
+    { code: "NG", name: "Nigeria", flag: "🇳🇬" },
+    { code: "GH", name: "Ghana", flag: "🇬🇭" },
+    { code: "US", name: "USA", flag: "🇺🇸" },
+    { code: "UK", name: "UK", flag: "🇬🇧" },
   ];
 
   const payoutOptions = [
@@ -33,13 +33,7 @@ export default function Send() {
 
   const handleSend = (e) => {
     e.preventDefault();
-    if (
-      !form.fromCountry ||
-      !form.recipientName ||
-      !form.recipientAccount ||
-      !form.payoutMethod ||
-      !form.amount
-    ) {
+    if (!form.fromCountry || !form.recipientName || !form.recipientAccount || !form.payoutMethod || !form.amount) {
       setConfirmation("❗ Please complete all fields.");
       return;
     }
@@ -65,26 +59,19 @@ export default function Send() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F3E8FF] flex items-center justify-center p-6">
-      <div className="max-w-4xl w-full bg-white rounded-2xl shadow-lg overflow-hidden">
-        {/* Header */}
-        <div className="bg-[#5B2C6F] flex items-center gap-3 px-6 py-4">
-          <SendIcon className="w-6 h-6 text-[#FFD700]" />
-          <h1 className="text-xl font-semibold text-white">Send Money</h1>
+    <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 flex items-center justify-center p-6">
+      <div className="max-w-4xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden border border-yellow-200">
+        <div className="bg-yellow-500 flex items-center gap-3 px-6 py-5">
+          <SendIcon className="w-6 h-6 text-white" />
+          <h1 className="text-2xl font-bold text-white tracking-wide">Send Money</h1>
         </div>
 
-        {/* Form Container */}
-        <div className="p-8">
-          <form onSubmit={handleSend} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* From Country */}
+        <div className="p-10">
+          <form onSubmit={handleSend} className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
-                <label
-                  htmlFor="fromCountry"
-                  className="block text-gray-700 font-medium mb-1 flex items-center gap-2"
-                >
-                  <Globe className="w-5 h-5 text-[#5B2C6F]" />
-                  From Country
+                <label htmlFor="fromCountry" className="block text-yellow-700 font-semibold mb-2 flex items-center gap-2">
+                  <Globe className="w-5 h-5 text-yellow-600" /> From Country
                 </label>
                 <select
                   id="fromCountry"
@@ -92,27 +79,20 @@ export default function Send() {
                   value={form.fromCountry}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFD700] transition"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 shadow-sm"
                 >
-                  <option value="" disabled>
-                    Select Country
-                  </option>
+                  <option value="" disabled>Select Country</option>
                   {countries.map((c) => (
                     <option key={c.code} value={c.code}>
-                      {c.name}
+                      {c.flag} {c.name}
                     </option>
                   ))}
                 </select>
               </div>
 
-              {/* Payout Method */}
               <div>
-                <label
-                  htmlFor="payoutMethod"
-                  className="block text-gray-700 font-medium mb-1 flex items-center gap-2"
-                >
-                  <Banknote className="w-5 h-5 text-[#5B2C6F]" />
-                  Payout Method
+                <label htmlFor="payoutMethod" className="block text-yellow-700 font-semibold mb-2 flex items-center gap-2">
+                  <Banknote className="w-5 h-5 text-yellow-600" /> Payout Method
                 </label>
                 <select
                   id="payoutMethod"
@@ -120,11 +100,9 @@ export default function Send() {
                   value={form.payoutMethod}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFD700] transition"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 shadow-sm"
                 >
-                  <option value="" disabled>
-                    Select Method
-                  </option>
+                  <option value="" disabled>Select Method</option>
                   {payoutOptions.map((opt) => (
                     <option key={opt.value} value={opt.value}>
                       {opt.label}
@@ -133,14 +111,9 @@ export default function Send() {
                 </select>
               </div>
 
-              {/* Recipient Name */}
               <div>
-                <label
-                  htmlFor="recipientName"
-                  className="block text-gray-700 font-medium mb-1 flex items-center gap-2"
-                >
-                  <User className="w-5 h-5 text-[#5B2C6F]" />
-                  Recipient Name
+                <label htmlFor="recipientName" className="block text-yellow-700 font-semibold mb-2 flex items-center gap-2">
+                  <User className="w-5 h-5 text-yellow-600" /> Recipient Name
                 </label>
                 <input
                   type="text"
@@ -150,18 +123,13 @@ export default function Send() {
                   onChange={handleChange}
                   required
                   placeholder="e.g. John Doe"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFD700] transition"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 shadow-sm"
                 />
               </div>
 
-              {/* Recipient Account/Number */}
               <div>
-                <label
-                  htmlFor="recipientAccount"
-                  className="block text-gray-700 font-medium mb-1 flex items-center gap-2"
-                >
-                  <Wallet className="w-5 h-5 text-[#5B2C6F]" />
-                  Recipient Account
+                <label htmlFor="recipientAccount" className="block text-yellow-700 font-semibold mb-2 flex items-center gap-2">
+                  <Wallet className="w-5 h-5 text-yellow-600" /> Recipient Account
                 </label>
                 <input
                   type="text"
@@ -170,23 +138,14 @@ export default function Send() {
                   value={form.recipientAccount}
                   onChange={handleChange}
                   required
-                  placeholder={
-                    form.payoutMethod === "lumens"
-                      ? "Stellar Address"
-                      : "Account number / Mobile"
-                  }
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFD700] transition"
+                  placeholder={form.payoutMethod === "lumens" ? "Stellar Address" : "Account number / Mobile"}
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 shadow-sm"
                 />
               </div>
 
-              {/* Amount */}
               <div className="md:col-span-2">
-                <label
-                  htmlFor="amount"
-                  className="block text-gray-700 font-medium mb-1 flex items-center gap-2"
-                >
-                  <SendIcon className="w-5 h-5 text-[#5B2C6F]" />
-                  Amount (USD)
+                <label htmlFor="amount" className="block text-yellow-700 font-semibold mb-2 flex items-center gap-2">
+                  <SendIcon className="w-5 h-5 text-yellow-600" /> Amount (USD)
                 </label>
                 <input
                   type="number"
@@ -198,51 +157,34 @@ export default function Send() {
                   min="1"
                   step="any"
                   placeholder="0.00"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFD700] transition"
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 shadow-sm"
                 />
               </div>
             </div>
 
-            {/* Confirmation */}
             {confirmation && (
-              <p className="text-center text-green-600 font-medium">{confirmation}</p>
+              <p className="text-center text-green-600 font-semibold mt-4">{confirmation}</p>
             )}
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={sending}
-              className="w-full bg-[#5B2C6F] text-white py-3 rounded-lg font-semibold hover:bg-[#43215A] transition disabled:opacity-60"
+              className="w-full bg-yellow-500 text-white py-3 rounded-xl font-semibold hover:bg-yellow-600 hover:scale-[1.02] transition-transform duration-200 disabled:opacity-60"
             >
               {sending ? "Sending..." : "Send Money"}
             </button>
           </form>
 
-          {/* Transaction Summary */}
           {summary && (
-            <div className="mt-8 bg-[#FFFDF2] border-t-4 border-[#FFD700] rounded-b-lg shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-[#2C3E50] mb-4">
-                Transaction Summary
-              </h3>
-              <ul className="space-y-2 text-gray-700">
-                <li>
-                  <strong>From Country:</strong> {summary.fromCountry}
-                </li>
-                <li>
-                  <strong>Recipient Name:</strong> {summary.recipientName}
-                </li>
-                <li>
-                  <strong>Payout Method:</strong> {payoutOptions.find(o => o.value === summary.payoutMethod)?.label}
-                </li>
-                <li>
-                  <strong>Recipient Info:</strong> {summary.recipientAccount}
-                </li>
-                <li>
-                  <strong>Amount:</strong> ${summary.amount}
-                </li>
-                <li>
-                  <strong>Time:</strong> {summary.time}
-                </li>
+            <div className="mt-10 bg-yellow-50 border-t-4 border-yellow-400 rounded-xl p-6 shadow-inner">
+              <h3 className="text-lg font-bold text-yellow-800 mb-4">Transaction Summary</h3>
+              <ul className="space-y-1 text-yellow-700">
+                <li><strong>From Country:</strong> {countries.find(c => c.code === summary.fromCountry)?.name}</li>
+                <li><strong>Recipient Name:</strong> {summary.recipientName}</li>
+                <li><strong>Payout Method:</strong> {payoutOptions.find(o => o.value === summary.payoutMethod)?.label}</li>
+                <li><strong>Recipient Info:</strong> {summary.recipientAccount}</li>
+                <li><strong>Amount:</strong> ${summary.amount}</li>
+                <li><strong>Time:</strong> {summary.time}</li>
               </ul>
             </div>
           )}

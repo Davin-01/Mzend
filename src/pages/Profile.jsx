@@ -1,163 +1,170 @@
 import React, { useState } from "react";
-import { User, Mail, Phone, Calendar, Edit3 } from "lucide-react";
+import { motion } from "framer-motion";
+import { FaMoon, FaSun } from "react-icons/fa";
+import { MdEdit, MdOutlinePassword } from "react-icons/md";
+import { BiBell } from "react-icons/bi";
 
-export default function Profile() {
-  // Dummy user data
-  const initialData = {
-    fullName: "David Moenga",
-    email: "david.moenga@example.com",
-    phone: "+1 (555) 123-4567",
-    birthDate: "1990-08-15",
-  };
+const Profile = () => {
+  const [darkMode, setDarkMode] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [userData, setUserData] = useState({
+    name: "John Doe",
+    email: "john@example.com",
+    role: "Admin",
+    username: "johndoe",
+    phone: "+1234567890",
+    address: "123 Main Street, New York, NY",
+    dob: "1990-01-01",
+  });
 
-  const [form, setForm] = useState(initialData);
-  const [editing, setEditing] = useState(false);
-  const [success, setSuccess] = useState("");
+  const handleToggleTheme = () => setDarkMode(!darkMode);
+  const handleInputChange = (e) =>
+    setUserData({ ...userData, [e.target.name]: e.target.value });
 
-  const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleEditToggle = () => {
-    setEditing((prev) => !prev);
-    setSuccess("");
-    if (editing) {
-      // If toggling off, reset to initial data (discard changes)
-      setForm(initialData);
-    }
-  };
-
-  const handleSave = (e) => {
-    e.preventDefault();
-    // For now, just show success message
-    setSuccess("✅ Profile updated successfully!");
-    setEditing(false);
-    // In future, send `form` to backend to save changes
-  };
+  const inputStyle =
+    "w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500";
 
   return (
-    <div className="min-h-screen bg-[#F3E8FF] p-6 flex justify-center">
-      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-lg overflow-hidden">
-        {/* Header */}
-        <div className="bg-[#5B2C6F] px-6 py-4 flex items-center justify-between">
-          <h1 className="text-xl font-semibold text-white flex items-center gap-2">
-            <User className="w-6 h-6 text-[#FFD700]" /> Profile
-          </h1>
+    <div className={`${darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-800"} min-h-screen p-6`}>
+      <div className="max-w-4xl mx-auto">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-3xl font-bold">Profile</h2>
           <button
-            onClick={handleEditToggle}
-            className="bg-[#FFD700] text-[#5B2C6F] px-4 py-2 rounded-lg hover:bg-[#e6c200] transition flex items-center gap-1"
+            onClick={handleToggleTheme}
+            className="text-xl bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 p-2 rounded-full"
           >
-            <Edit3 className="w-4 h-4" />
-            {editing ? "Cancel" : "Edit"}
+            {darkMode ? <FaSun /> : <FaMoon />}
           </button>
         </div>
 
-        {/* Content */}
-        <div className="p-6 space-y-6">
-          {/* Avatar */}
-          <div className="flex justify-center">
+        {/* Profile Card */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-6"
+        >
+          <div className="flex items-center space-x-6">
             <img
-              src={`https://api.dicebear.com/7.x/initials/svg?seed=${initialData.fullName}`}
-              alt="User Avatar"
-              className="w-28 h-28 rounded-full border-4 border-[#FFD700]"
+              className="w-24 h-24 rounded-full object-cover border-2 border-blue-500"
+              src="https://i.pravatar.cc/100"
+              alt="Profile"
             />
-          </div>
-
-          {/* Profile Form */}
-          <form onSubmit={handleSave} className="space-y-4">
-            {/* Full Name */}
             <div>
-              <label className="block text-gray-700 font-medium mb-1 flex items-center gap-2">
-                <User className="w-5 h-5 text-[#5B2C6F]" /> Full Name
-              </label>
+              <h3 className="text-xl font-semibold">{userData.name}</h3>
+              <p className="text-gray-500 dark:text-gray-300">{userData.email}</p>
+              <p className="text-sm text-blue-600 mt-1">{userData.role}</p>
+            </div>
+            <div className="ml-auto space-x-2">
+              <button
+                onClick={() => setEditOpen(true)}
+                className="px-4 py-2 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center space-x-1"
+              >
+                <MdEdit />
+                <span>Edit</span>
+              </button>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Quick Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          {[
+            { label: "Transactions", value: "128" },
+            { label: "Last Login", value: "2025-06-11" },
+            { label: "Status", value: "Active" },
+          ].map((stat, index) => (
+            <div
+              key={index}
+              className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow text-center"
+            >
+              <p className="text-sm text-gray-500 dark:text-gray-300">{stat.label}</p>
+              <p className="text-xl font-bold mt-1">{stat.value}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Personal Info */}
+        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-6">
+          <h4 className="text-lg font-semibold mb-4">Personal Information</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            {["username", "phone", "address", "dob"].map((key) => (
+              <div key={key}>
+                <label className="text-gray-600 dark:text-gray-400 capitalize">{key}</label>
+                <p className="text-gray-900 dark:text-gray-200">{userData[key]}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Account Settings */}
+        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-6">
+          <h4 className="text-lg font-semibold mb-4">Account Settings</h4>
+          <div className="space-y-4 text-sm">
+            <button className="w-full bg-gray-100 dark:bg-gray-700 text-left px-4 py-2 rounded hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center gap-2">
+              <MdOutlinePassword />
+              Change Password
+            </button>
+            <button className="w-full bg-gray-100 dark:bg-gray-700 text-left px-4 py-2 rounded hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center gap-2">
+              <BiBell />
+              Notification Preferences
+            </button>
+          </div>
+        </div>
+
+        {/* Recent Activity */}
+        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+          <h4 className="text-lg font-semibold mb-4">Recent Activity</h4>
+          <ul className="text-sm space-y-2">
+            <li className="text-gray-700 dark:text-gray-300">🕒 Logged in from Chrome - 2 hours ago</li>
+            <li className="text-gray-700 dark:text-gray-300">📥 Downloaded invoice - 1 day ago</li>
+            <li className="text-gray-700 dark:text-gray-300">✏️ Updated profile info - 3 days ago</li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Edit Modal */}
+      {editOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md z-50 shadow-lg">
+            <h3 className="text-xl font-semibold mb-4">Edit Profile</h3>
+            <div className="space-y-4">
               <input
                 type="text"
-                name="fullName"
-                value={form.fullName}
-                onChange={handleChange}
-                disabled={!editing}
-                className={`w-full border ${
-                  editing ? "border-[#FFD700]" : "border-gray-300"
-                } rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFD700] ${
-                  editing ? "" : "bg-gray-50"
-                } transition`}
+                name="name"
+                className={inputStyle}
+                value={userData.name}
+                onChange={handleInputChange}
+                placeholder="Full Name"
               />
-            </div>
-
-            {/* Email */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-1 flex items-center gap-2">
-                <Mail className="w-5 h-5 text-[#5B2C6F]" /> Email Address
-              </label>
               <input
                 type="email"
                 name="email"
-                value={form.email}
-                onChange={handleChange}
-                disabled={!editing}
-                className={`w-full border ${
-                  editing ? "border-[#FFD700]" : "border-gray-300"
-                } rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFD700] ${
-                  editing ? "" : "bg-gray-50"
-                } transition`}
+                className={inputStyle}
+                value={userData.email}
+                onChange={handleInputChange}
+                placeholder="Email"
               />
+              <div className="flex justify-end space-x-2 pt-4">
+                <button
+                  onClick={() => setEditOpen(false)}
+                  className="px-4 py-2 text-sm rounded bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => setEditOpen(false)}
+                  className="px-4 py-2 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
+                >
+                  Save
+                </button>
+              </div>
             </div>
-
-            {/* Phone */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-1 flex items-center gap-2">
-                <Phone className="w-5 h-5 text-[#5B2C6F]" /> Phone Number
-              </label>
-              <input
-                type="text"
-                name="phone"
-                value={form.phone}
-                onChange={handleChange}
-                disabled={!editing}
-                className={`w-full border ${
-                  editing ? "border-[#FFD700]" : "border-gray-300"
-                } rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFD700] ${
-                  editing ? "" : "bg-gray-50"
-                } transition`}
-              />
-            </div>
-
-            {/* Birth Date */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-1 flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-[#5B2C6F]" /> Birth Date
-              </label>
-              <input
-                type="date"
-                name="birthDate"
-                value={form.birthDate || initialData.birthDate}
-                onChange={handleChange}
-                disabled={!editing}
-                className={`w-full border ${
-                  editing ? "border-[#FFD700]" : "border-gray-300"
-                } rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFD700] ${
-                  editing ? "" : "bg-gray-50"
-                } transition`}
-              />
-            </div>
-
-            {/* Save Button */}
-            {editing && (
-              <button
-                type="submit"
-                className="w-full bg-[#5B2C6F] text-white py-3 rounded-lg font-semibold hover:bg-[#43215A] transition"
-              >
-                Save Changes
-              </button>
-            )}
-          </form>
-
-          {/* Success Message */}
-          {success && (
-            <p className="text-center text-green-600 font-medium">{success}</p>
-          )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
-}
+};
+
+export default Profile;
